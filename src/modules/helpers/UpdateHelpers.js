@@ -293,7 +293,7 @@ export default class UpdateHelpers {
           getLastYAxis(index)
         } else {
           // if last y-axis don't exist, check the original yaxis
-          if (typeof this.ctx.opts.yaxis[index] !== 'undefined') {
+          if (typeof this.ctx.opts.yaxis[index] !== 'undefined' && !Object.isFrozen(this.ctx.opts.yaxis[index])) {
             yaxe.min = this.ctx.opts.yaxis[index].min
             yaxe.max = this.ctx.opts.yaxis[index].max
           }
