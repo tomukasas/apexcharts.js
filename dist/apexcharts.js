@@ -1,5 +1,5 @@
 /*!
- * ApexCharts v4.5.0-c7
+ * ApexCharts v4.5.0-c8
  * (c) 2018-2025 ApexCharts
  * Released under the MIT License.
  */
@@ -34072,7 +34072,7 @@
               getLastYAxis(index);
             } else {
               // if last y-axis don't exist, check the original yaxis
-              if (typeof _this3.ctx.opts.yaxis[index] !== 'undefined') {
+              if (typeof _this3.ctx.opts.yaxis[index] !== 'undefined' && !Object.isFrozen(_this3.ctx.opts.yaxis[index])) {
                 yaxe.min = _this3.ctx.opts.yaxis[index].min;
                 yaxe.max = _this3.ctx.opts.yaxis[index].max;
               }
