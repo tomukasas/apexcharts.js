@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Basic Bar Chart</title>
+
+  <link href="../../assets/styles.css" rel="stylesheet" />
+
+  <style>
+
+    #chart {
+      max-width: 100%;
+      margin: 235px auto;
+    }
+
+  </style>
+
+  <script>
+    window.Promise ||
+    document.write(
+      '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+    )
+    window.Promise ||
+    document.write(
+      '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+    )
+    window.Promise ||
+    document.write(
+      '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+    )
+  </script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+  <script src="../../../dist/apexcharts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
+
+
+  <script>
+    // Replace Math.random() with a pseudo-random number generator to get reproducible results in e2e tests
+    // Based on https://gist.github.com/blixt/f17b47c62508be59987b
+    var _seed = 42;
+    Math.random = function() {
+      _seed = _seed * 16807 % 2147483647;
+      return (_seed - 1) / 2147483646;
+    };
+  </script>
+
+
+</head>
+
+<body>
+
+<div id="app">
+  <div id="chart">
+    <apexchart type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
+  </div>
+</div>
+
+<!-- Below element is just for displaying source code. it is not required. DO NOT USE -->
+<div id="html">
+  &lt;div id=&quot;chart&quot;&gt;
+  &lt;apexchart type=&quot;bar&quot; height=&quot;350&quot; :options=&quot;chartOptions&quot; :series=&quot;series&quot;&gt;&lt;/apexchart&gt;
+  &lt;/div&gt;
+</div>
+
+<script>
+  const series = [
+    {
+      name: "A",
+      data: [
+        "0",
+        "0",
+        "0",
+        "0",
+        "173.6905574446063",
+        "1.058985386",
+        "1.88",
+        "0.0217732812",
+        "4.2344994011",
+        "0",
+        "0",
+        "2.2892424875"
+      ],
+      color: "#351C75",
+      group: "all-series"
+    }
+  ]
+  const vue = new Vue({
+    el: '#app',
+    components: {
+      apexchart: VueApexCharts,
+    },
+    updated: function () {
+      console.log('updated')
+    },
+    created: function () {
+      console.log('created')
+    },
+    data: {
+      series: series,
+      chartOptions: {
+        chart: {
+          selection: {
+            enabled: false
+          },
+          animations: {
+            enabled: false
+          },
+          fontFamily: "Inter",
+          toolbar: {
+            show: false
+          },
+          parentHeightOffset: 0,
+          duplicateYAxis: false,
+          events: {},
+          id: "column-chart",
+          stacked: true,
+          renderZeroValues: false
+        },
+        dataLabels: {
+          enabled: false
+        },
+        legend: {
+          markers: {
+            radius: 12,
+            offsetX: -10
+          },
+          itemMargin: {
+            horizontal: 24
+          },
+          show: false
+        },
+        grid: {
+          show: true,
+          borderColor: "#E4E4E4",
+          xaxis: {
+            lines: {
+              show: false
+            }
+          },
+          padding: {
+            top: 0,
+            left: 20,
+            right: 20,
+            bottom: 40
+          }
+        },
+        yaxis: [
+          {
+            show: true,
+            showAlways: false,
+            showForNullSeries: false,
+            opposite: false,
+            reversed: false,
+            logarithmic: false,
+            logBase: 10,
+            tickAmount: 6,
+            forceNiceScale: true,
+            max: 174,
+            min: 0,
+            floating: false,
+            labels: {
+              show: true,
+              showDuplicates: false,
+              minWidth: 0,
+              maxWidth: 160,
+              offsetX: 0,
+              offsetY: 0,
+              align: "left",
+              rotate: 0,
+              padding: 0,
+              style: {
+                colors: [
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ],
+                fontSize: "14px",
+                fontWeight: 400,
+                cssClass: ""
+              }
+            },
+            axisBorder: {
+              show: false,
+              color: "#e0e0e0",
+              width: 1,
+              offsetX: 0,
+              offsetY: 0
+            },
+            axisTicks: {
+              show: false,
+              color: "#e0e0e0",
+              width: 6,
+              offsetX: 0,
+              offsetY: 0
+            },
+            title: {
+              rotate: -90,
+              offsetY: 0,
+              offsetX: 0,
+              style: {
+                fontSize: "11px",
+                fontWeight: 900,
+                cssClass: ""
+              }
+            },
+            tooltip: {
+              enabled: false,
+              offsetX: 0
+            },
+            crosshairs: {
+              show: true,
+              position: "front",
+              stroke: {
+                color: "#b6b6b6",
+                width: 1,
+                dashArray: 0
+              }
+            }
+          }
+        ],
+        xaxis: {
+          labels: {
+            style: {
+              fontSize: "12px",
+              fontWeight: 600
+            },
+            hideOverlappingLabels: true,
+            offsetY: 4,
+            rotateAlways: true
+          },
+          axisTicks: {
+            show: false
+          },
+          type: "category",
+          categories: [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024"
+          ],
+          axisBorder: {
+            show: false
+          }
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+          style: {
+            fontSize: "14px",
+            fontFamily: "Inter"
+          },
+          y: {},
+          x: {
+            format: "MMMM d yyyy"
+          },
+          showOnEvents: [
+            "mouseup"
+          ]
+        },
+        noData: {
+          text: "Loading...",
+          align: "center",
+          verticalAlign: "middle",
+          offsetX: 0,
+          offsetY: -10
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            borderRadius: 0,
+            columnWidth: "60%",
+            endingShape: "flat"
+          }
+        },
+        stroke: {
+          colors: [
+            "transparent"
+          ],
+          width: 2
+        },
+        colors: [
+          "#351C75"
+        ],
+        hideLegend: true
+      }
+    }
+  })
+</script>
+
+</body>
+</html>
+
+

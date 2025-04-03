@@ -327,6 +327,7 @@ class Bar {
   }) {
     const w = this.w
     const graphics = new Graphics(this.ctx)
+    const isZeroData = parseInt(w.config.series[i].data[j]) === 0
 
     if (!lineFill) {
       // if user provided a function in colors, we need to eval here
@@ -363,7 +364,7 @@ class Bar {
       lineFill = w.config.series[i].data[j].strokeColor
     }
 
-    if (this.isNullValue) {
+    if (this.isNullValue || (!w.config.chart.renderZeroValues && isZeroData)) {
       pathFill = 'none'
     }
 
