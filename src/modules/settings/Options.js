@@ -402,6 +402,8 @@ export default class Options {
             },
           },
         },
+        duplicateYAxis: false,
+        renderZeroValues: true
       },
       plotOptions: {
         line: {

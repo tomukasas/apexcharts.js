@@ -196,6 +196,7 @@ class Bar {
           strokeWidth,
           elSeries,
         }
+
         if (this.isHorizontal) {
           paths = this.drawBarPaths({
             ...pathsParams,
@@ -204,6 +205,10 @@ class Bar {
             yDivision,
           })
           barWidth = this.series[i][j] / this.invertedYRatio
+
+          if (barWidth < 10) {
+            barWidth = barWidth * 5
+          }
         } else {
           paths = this.drawColumnPaths({
             ...pathsParams,
@@ -327,6 +332,7 @@ class Bar {
   }) {
     const w = this.w
     const graphics = new Graphics(this.ctx)
+    const isZeroData = parseInt(w.config.series[i].data[j]) === 0
 
     if (!lineFill) {
       // if user provided a function in colors, we need to eval here
@@ -363,7 +369,7 @@ class Bar {
       lineFill = w.config.series[i].data[j].strokeColor
     }
 
-    if (this.isNullValue) {
+    if (this.isNullValue || (!w.config.chart.renderZeroValues && isZeroData)) {
       pathFill = 'none'
     }
 
@@ -385,7 +391,7 @@ class Bar {
       animationDelay: delay,
       initialSpeed: w.config.chart.animations.speed,
       dataChangeSpeed: w.config.chart.animations.dynamicAnimation.speed,
-      className: `apexcharts-${type}-area ${classes}`,
+      className: `apexcharts-${type}-area ${classes || ''}`,
       chartType: type,
     })
 
@@ -488,8 +494,8 @@ class Bar {
         zeroW -
         (this.barHelpers.getXForValue(this.series[i][j], zeroW) - zeroW) / 2
     }
-
-    x = this.barHelpers.getXForValue(this.series[i][j] < 3 ? 3 : this.series[i][j], zeroW)
+    
+    x = this.barHelpers.getXForValue(this.series[i][j] < 10 ? this.series[i][j] * 5 : this.series[i][j], zeroW)
 
     const paths = this.barHelpers.getBarpaths({
       barYPosition,
