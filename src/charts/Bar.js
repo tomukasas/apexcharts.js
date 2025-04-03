@@ -206,8 +206,8 @@ class Bar {
           })
           barWidth = this.series[i][j] / this.invertedYRatio
 
-          if (barWidth < 10) {
-            barWidth = barWidth * 5
+          if (barWidth < 50) {
+            barWidth = 50
           }
         } else {
           paths = this.drawColumnPaths({
@@ -494,8 +494,11 @@ class Bar {
         zeroW -
         (this.barHelpers.getXForValue(this.series[i][j], zeroW) - zeroW) / 2
     }
-    
-    x = this.barHelpers.getXForValue(this.series[i][j] < 10 ? this.series[i][j] * 5 : this.series[i][j], zeroW)
+
+    x = this.barHelpers.getXForValue(this.series[i][j], zeroW)
+    if (x < 50) {
+      x = 50
+    }
 
     const paths = this.barHelpers.getBarpaths({
       barYPosition,

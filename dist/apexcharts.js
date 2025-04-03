@@ -1,5 +1,5 @@
 /*!
- * ApexCharts v4.5.0-c9
+ * ApexCharts v4.5.0-c10
  * (c) 2018-2025 ApexCharts
  * Released under the MIT License.
  */
@@ -27273,8 +27273,8 @@
                 yDivision: yDivision
               }));
               barWidth = this.series[i][j] / this.invertedYRatio;
-              if (barWidth < 10) {
-                barWidth = barWidth * 5;
+              if (barWidth < 50) {
+                barWidth = 50;
               }
             } else {
               paths = this.drawColumnPaths(_objectSpread2(_objectSpread2({}, pathsParams), {}, {
@@ -27516,7 +27516,10 @@
         if (this.isFunnel) {
           zeroW = zeroW - (this.barHelpers.getXForValue(this.series[i][j], zeroW) - zeroW) / 2;
         }
-        x = this.barHelpers.getXForValue(this.series[i][j] < 10 ? this.series[i][j] * 5 : this.series[i][j], zeroW);
+        x = this.barHelpers.getXForValue(this.series[i][j], zeroW);
+        if (x < 50) {
+          x = 50;
+        }
         var paths = this.barHelpers.getBarpaths({
           barYPosition: barYPosition,
           barHeight: barHeight,
