@@ -1,5 +1,5 @@
 /*!
- * ApexCharts v4.5.0-c8
+ * ApexCharts v4.5.0-c9
  * (c) 2018-2025 ApexCharts
  * Released under the MIT License.
  */
@@ -12334,7 +12334,9 @@
                   width: 1
                 }
               }
-            }
+            },
+            duplicateYAxis: false,
+            renderZeroValues: true
           },
           plotOptions: {
             line: {
@@ -27271,6 +27273,9 @@
                 yDivision: yDivision
               }));
               barWidth = this.series[i][j] / this.invertedYRatio;
+              if (barWidth < 10) {
+                barWidth = barWidth * 5;
+              }
             } else {
               paths = this.drawColumnPaths(_objectSpread2(_objectSpread2({}, pathsParams), {}, {
                 xDivision: xDivision,
@@ -27376,6 +27381,7 @@
           classes = _ref.classes;
         var w = this.w;
         var graphics = new Graphics(this.ctx);
+        var isZeroData = parseInt(w.config.series[i].data[j]) === 0;
         if (!lineFill) {
           // if user provided a function in colors, we need to eval here
           // Note: the position of this function logic (ex. stroke: { colors: ["",function(){}] }) i.e array index 1 depicts the realIndex/seriesIndex.
@@ -27403,7 +27409,7 @@
         if (w.config.series[i].data[j] && w.config.series[i].data[j].strokeColor) {
           lineFill = w.config.series[i].data[j].strokeColor;
         }
-        if (this.isNullValue) {
+        if (this.isNullValue || !w.config.chart.renderZeroValues && isZeroData) {
           pathFill = 'none';
         }
         var delay = j / w.config.chart.animations.animateGradually.delay * (w.config.chart.animations.speed / w.globals.dataPoints) / 2.4;
@@ -27420,7 +27426,7 @@
           animationDelay: delay,
           initialSpeed: w.config.chart.animations.speed,
           dataChangeSpeed: w.config.chart.animations.dynamicAnimation.speed,
-          className: "apexcharts-".concat(type, "-area ").concat(classes),
+          className: "apexcharts-".concat(type, "-area ").concat(classes || ''),
           chartType: type
         });
         renderedPath.attr('clip-path', "url(#gridRectBarMask".concat(w.globals.cuid, ")"));
@@ -27510,7 +27516,7 @@
         if (this.isFunnel) {
           zeroW = zeroW - (this.barHelpers.getXForValue(this.series[i][j], zeroW) - zeroW) / 2;
         }
-        x = this.barHelpers.getXForValue(this.series[i][j] < 3 ? 3 : this.series[i][j], zeroW);
+        x = this.barHelpers.getXForValue(this.series[i][j] < 10 ? this.series[i][j] * 5 : this.series[i][j], zeroW);
         var paths = this.barHelpers.getBarpaths({
           barYPosition: barYPosition,
           barHeight: barHeight,
