@@ -14117,7 +14117,8 @@
           plotOptions: _objectSpread2(_objectSpread2({}, barDefaults.plotOptions), {}, {
             bar: _objectSpread2(_objectSpread2({}, barDefaults.plotOptions.bar), {}, {
               borderRadiusApplication: 'end',
-              borderRadiusWhenStacked: 'last'
+              borderRadiusWhenStacked: 'last',
+              maxSeriesToRender: Number.MAX_SAFE_INTEGER
             })
           })
         });
@@ -26603,7 +26604,9 @@
         var fillColor = null;
         var seriesNumber = this.barCtx.barOptions.distributed ? j : i;
         var useRangeColor = false;
-        if (this.barCtx.barOptions.colors.ranges.length > 0) {
+        var shouldUseSingleColor = this.barCtx.barOptions.maxSeriesToRender !== Number.MAX_SAFE_INTEGER;
+        fillColor = shouldUseSingleColor && this.barCtx.barOptions.colorForSingleBar ? this.barCtx.barOptions.colorForSingleBar : null;
+        if (this.barCtx.barOptions.colors.ranges.length > 0 && (!shouldUseSingleColor || !fillColor)) {
           var colorRange = this.barCtx.barOptions.colors.ranges;
           colorRange.map(function (range) {
             if (series[i][j] >= range.from && series[i][j] <= range.to) {
@@ -26792,7 +26795,8 @@
           if (j >= this.barCtx.barOptions.colors.backgroundBarColors.length) {
             j %= this.barCtx.barOptions.colors.backgroundBarColors.length;
           }
-          var bcolor = this.barCtx.barOptions.colors.backgroundBarColors[j];
+          var shouldUseSingleColor = this.barCtx.barOptions.maxSeriesToRender !== Number.MAX_SAFE_INTEGER;
+          var bcolor = shouldUseSingleColor && this.barCtx.barOptions.colorForSingleBar ? this.barCtx.barOptions.colorForSingleBar : this.barCtx.barOptions.colors.backgroundBarColors[j];
           var rect = graphics.drawRect(typeof x1 !== 'undefined' ? x1 : 0, typeof y1 !== 'undefined' ? y1 : 0, typeof x2 !== 'undefined' ? x2 : w.globals.gridWidth, typeof y2 !== 'undefined' ? y2 : w.globals.gridHeight, this.barCtx.barOptions.colors.backgroundBarRadius, bcolor, this.barCtx.barOptions.colors.backgroundBarOpacity);
           elSeries.add(rect);
           rect.node.classList.add('apexcharts-backgroundBar');
@@ -27716,6 +27720,7 @@
         });
         var x = 0;
         var y = 0;
+        var loopLength = w.config.plotOptions.bar.maxSeriesToRender >= series.length ? series.length : 1;
         var _loop = function _loop(i, bc) {
           var xDivision = void 0; // xDivision is the GRIDWIDTH divided by number of datapoints (columns)
           var yDivision = void 0; // yDivision is the GRIDHEIGHT divided by number of datapoints (bars)
@@ -27779,7 +27784,7 @@
               return 0;
             });
           }
-          for (var j = 0; j < w.globals.dataPoints; j++) {
+          var _loop2 = function _loop2(j) {
             var strokeWidth = _this.barHelpers.getStrokeWidth(i, j, realIndex);
             var commonPathOpts = {
               indexes: {
@@ -27810,7 +27815,9 @@
                 barWidth: barWidth,
                 zeroH: zeroH
               }));
-              barHeight = _this.series[i][j] / _this.yRatio[translationsIndex];
+              barHeight = loopLength === 1 ? _this.series.reduce(function (sum, s) {
+                return sum + s[j];
+              }, 0) / _this.yRatio[translationsIndex] : _this.series[i][j] / _this.yRatio[translationsIndex];
             }
             var barGoalLine = _this.barHelpers.drawGoalLine({
               barXPosition: paths.barXPosition,
@@ -27857,6 +27864,9 @@
               visibleSeries: columnGroupIndex,
               classes: classes
             }));
+          };
+          for (var j = 0; j < w.globals.dataPoints; j++) {
+            _loop2(j);
           }
 
           // push all x val arrays into main xArr
@@ -27872,7 +27882,7 @@
           _this.groupCtx.prevXVal.push(_this.groupCtx.xArrjVal);
           ret.add(elSeries);
         };
-        for (var i = 0, bc = 0; i < series.length; i++, bc++) {
+        for (var i = 0, bc = 0; i < loopLength; i++, bc++) {
           _loop(i, bc);
         }
         return ret;
@@ -28103,8 +28113,11 @@
           // zero
           barYPosition = zeroH;
         }
-        if (this.series[i][j]) {
-          y = barYPosition - this.series[i][j] / this.yRatio[translationsIndex] + (this.isReversed ? this.series[i][j] / this.yRatio[translationsIndex] : 0) * 2;
+        var heightFromSeries = this.w.config.plotOptions.bar.maxSeriesToRender === Number.MAX_SAFE_INTEGER ? this.series[i][j] : this.series.reduce(function (sum, s) {
+          return sum + s[j];
+        }, 0);
+        if (heightFromSeries) {
+          y = barYPosition - heightFromSeries / this.yRatio[translationsIndex] + (this.isReversed ? heightFromSeries / this.yRatio[translationsIndex] : 0) * 2;
         } else {
           // fixes #3610
           y = barYPosition;

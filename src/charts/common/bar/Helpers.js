@@ -203,7 +203,12 @@ export default class Helpers {
     let seriesNumber = this.barCtx.barOptions.distributed ? j : i
     let useRangeColor = false
 
-    if (this.barCtx.barOptions.colors.ranges.length > 0) {
+    const shouldUseSingleColor = this.barCtx.barOptions.maxSeriesToRender !== Number.MAX_SAFE_INTEGER
+    fillColor = shouldUseSingleColor && this.barCtx.barOptions.colorForSingleBar
+      ? this.barCtx.barOptions.colorForSingleBar
+      : null
+
+    if (this.barCtx.barOptions.colors.ranges.length > 0 && (!shouldUseSingleColor || !fillColor)) {
       const colorRange = this.barCtx.barOptions.colors.ranges
       colorRange.map((range) => {
         if (series[i][j] >= range.from && series[i][j] <= range.to) {
@@ -224,8 +229,8 @@ export default class Helpers {
       fillType: w.config.series[i].data[j]?.fill?.type
         ? w.config.series[i].data[j]?.fill.type
         : Array.isArray(w.config.fill.type)
-        ? w.config.fill.type[realIndex]
-        : w.config.fill.type,
+          ? w.config.fill.type[realIndex]
+          : w.config.fill.type,
     })
 
     return {
@@ -370,7 +375,11 @@ export default class Helpers {
         j %= this.barCtx.barOptions.colors.backgroundBarColors.length
       }
 
-      let bcolor = this.barCtx.barOptions.colors.backgroundBarColors[j]
+      const shouldUseSingleColor = this.barCtx.barOptions.maxSeriesToRender !== Number.MAX_SAFE_INTEGER
+      const bcolor = shouldUseSingleColor && this.barCtx.barOptions.colorForSingleBar
+        ? this.barCtx.barOptions.colorForSingleBar
+        : this.barCtx.barOptions.colors.backgroundBarColors[j]
+
       let rect = graphics.drawRect(
         typeof x1 !== 'undefined' ? x1 : 0,
         typeof y1 !== 'undefined' ? y1 : 0,
@@ -440,7 +449,7 @@ export default class Helpers {
       graphics.line(x2, y2) +
       sl +
       (w.config.plotOptions.bar.borderRadiusApplication === 'around' ||
-      this.arrBorderRadius[realIndex][j] === 'both'
+        this.arrBorderRadius[realIndex][j] === 'both'
         ? ' Z'
         : ' z')
 
@@ -456,7 +465,7 @@ export default class Helpers {
       sl +
       graphics.line(x1, y1) +
       (w.config.plotOptions.bar.borderRadiusApplication === 'around' ||
-      this.arrBorderRadius[realIndex][j] === 'both'
+        this.arrBorderRadius[realIndex][j] === 'both'
         ? ' Z'
         : ' z')
 
@@ -536,7 +545,7 @@ export default class Helpers {
       graphics.line(x2, y2) +
       sl +
       (w.config.plotOptions.bar.borderRadiusApplication === 'around' ||
-      this.arrBorderRadius[realIndex][j] === 'both'
+        this.arrBorderRadius[realIndex][j] === 'both'
         ? ' Z'
         : ' z')
 
@@ -550,7 +559,7 @@ export default class Helpers {
       sl +
       graphics.line(x1, y1) +
       (w.config.plotOptions.bar.borderRadiusApplication === 'around' ||
-      this.arrBorderRadius[realIndex][j] === 'both'
+        this.arrBorderRadius[realIndex][j] === 'both'
         ? ' Z'
         : ' z')
 
@@ -611,7 +620,7 @@ export default class Helpers {
         (this.barCtx.isReversed
           ? value / this.barCtx.yRatio[translationsIndex]
           : 0) *
-          2
+        2
     }
     return yForVal
   }
@@ -756,7 +765,7 @@ export default class Helpers {
       graphics.line(currX1, currY1) +
       graphics.line(prevX1, prevY2) +
       (w.config.plotOptions.bar.borderRadiusApplication === 'around' ||
-      this.arrBorderRadius[realIndex][j] === 'both'
+        this.arrBorderRadius[realIndex][j] === 'both'
         ? ' Z'
         : ' z')
 

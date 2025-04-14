@@ -39,7 +39,9 @@ class BarStacked extends Bar {
     let x = 0
     let y = 0
 
-    for (let i = 0, bc = 0; i < series.length; i++, bc++) {
+    const loopLength = w.config.plotOptions.bar.maxSeriesToRender >= series.length ? series.length : 1
+
+    for (let i = 0, bc = 0; i < loopLength; i++, bc++) {
       let xDivision // xDivision is the GRIDWIDTH divided by number of datapoints (columns)
       let yDivision // yDivision is the GRIDHEIGHT divided by number of datapoints (bars)
       let zeroH // zeroH is the baseline where 0 meets y axis
@@ -145,7 +147,9 @@ class BarStacked extends Bar {
             barWidth,
             zeroH,
           })
-          barHeight = this.series[i][j] / this.yRatio[translationsIndex]
+          barHeight = loopLength === 1
+            ? this.series.reduce((sum, s) => sum + s[j], 0) / this.yRatio[translationsIndex]
+            : this.series[i][j] / this.yRatio[translationsIndex]
         }
 
         const barGoalLine = this.barHelpers.drawGoalLine({
@@ -340,16 +344,16 @@ class BarStacked extends Bar {
         bXP =
           this.series[i][j] >= 0
             ? this.groupCtx.prevX[gsi - 1][j] +
-              prevBarW -
-              (this.isReversed ? prevBarW : 0) * 2
+            prevBarW -
+            (this.isReversed ? prevBarW : 0) * 2
             : this.groupCtx.prevX[gsi - 1][j]
       } else if (this.groupCtx.prevXVal[gsi - 1][j] >= 0) {
         bXP =
           this.series[i][j] >= 0
             ? this.groupCtx.prevX[gsi - 1][j]
             : this.groupCtx.prevX[gsi - 1][j] -
-              prevBarW +
-              (this.isReversed ? prevBarW : 0) * 2
+            prevBarW +
+            (this.isReversed ? prevBarW : 0) * 2
       }
 
       barXPosition = bXP
@@ -517,14 +521,19 @@ class BarStacked extends Bar {
       barYPosition = zeroH
     }
 
-    if (this.series[i][j]) {
+    const heightFromSeries = this.w.config.plotOptions.bar.maxSeriesToRender === Number.MAX_SAFE_INTEGER
+      ? this.series[i][j]
+      : this.series.reduce((sum, s) => sum + s[j], 0)
+
+    if (heightFromSeries) {
       y =
         barYPosition -
-        this.series[i][j] / this.yRatio[translationsIndex] +
-        (this.isReversed
-          ? this.series[i][j] / this.yRatio[translationsIndex]
-          : 0) *
-          2
+        heightFromSeries / this.yRatio[translationsIndex] +
+        (
+          this.isReversed
+            ? heightFromSeries / this.yRatio[translationsIndex]
+            : 0
+        ) * 2
     } else {
       // fixes #3610
       y = barYPosition

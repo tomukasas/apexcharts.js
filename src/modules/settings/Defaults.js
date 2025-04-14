@@ -737,6 +737,7 @@ export default class Defaults {
           ...barDefaults.plotOptions.bar,
           borderRadiusApplication: 'end',
           borderRadiusWhenStacked: 'last',
+          maxSeriesToRender: Number.MAX_SAFE_INTEGER,
         },
       },
     }
@@ -1180,11 +1181,10 @@ export default class Defaults {
       w.config.series[seriesIndex].type !== chartType
     ) {
       return `<div class="apexcharts-custom-tooltip">
-          ${
-            w.config.series[seriesIndex].name
-              ? w.config.series[seriesIndex].name
-              : 'series-' + (seriesIndex + 1)
-          }: <strong>${w.globals.series[seriesIndex][dataPointIndex]}</strong>
+          ${w.config.series[seriesIndex].name
+          ? w.config.series[seriesIndex].name
+          : 'series-' + (seriesIndex + 1)
+        }: <strong>${w.globals.series[seriesIndex][dataPointIndex]}</strong>
         </div>`
     } else {
       return (
