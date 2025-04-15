@@ -229,8 +229,7 @@ class Bar {
         ) {
           const barShadow = this.barHelpers.drawBarShadow({
             color:
-              typeof pathFill.color === 'string' &&
-              pathFill.color?.indexOf('url') === -1
+              typeof pathFill.color === 'string' && pathFill.color?.indexOf('url') === -1
                 ? pathFill.color
                 : Utils.hexToRgba(w.globals.colors[i]),
             prevPaths: this.pathArr[this.pathArr.length - 1],
@@ -332,7 +331,12 @@ class Bar {
   }) {
     const w = this.w
     const graphics = new Graphics(this.ctx)
-    const isZeroData = parseInt(w.config.series[i].data[j]) === 0
+    const isSingleBar = w.config.plotOptions.bar.maxSeriesToRender <= series.length
+    const isZeroData = isSingleBar
+      ? w.config.series.reduce((acc, curr) => {
+        return acc || parseInt(curr.data[j]) === 0
+      }, false)
+      : parseInt(w.config.series[i].data[j]) === 0
 
     if (!lineFill) {
       // if user provided a function in colors, we need to eval here
