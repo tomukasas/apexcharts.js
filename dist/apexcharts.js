@@ -1,5 +1,5 @@
 /*!
- * ApexCharts v4.5.0-c11
+ * ApexCharts v4.5.0-c12
  * (c) 2018-2025 ApexCharts
  * Released under the MIT License.
  */
@@ -27385,7 +27385,10 @@
           classes = _ref.classes;
         var w = this.w;
         var graphics = new Graphics(this.ctx);
-        var isZeroData = parseInt(w.config.series[i].data[j]) === 0;
+        var isSingleBar = w.config.plotOptions.bar.maxSeriesToRender <= series.length;
+        var isZeroData = isSingleBar ? w.config.series.reduce(function (acc, curr) {
+          return acc || parseInt(curr.data[j]) === 0;
+        }, false) : parseInt(w.config.series[i].data[j]) === 0;
         if (!lineFill) {
           // if user provided a function in colors, we need to eval here
           // Note: the position of this function logic (ex. stroke: { colors: ["",function(){}] }) i.e array index 1 depicts the realIndex/seriesIndex.
