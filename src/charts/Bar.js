@@ -331,12 +331,10 @@ class Bar {
   }) {
     const w = this.w
     const graphics = new Graphics(this.ctx)
-    const isSingleBar = w.config.plotOptions.bar.maxSeriesToRender <= series.length
+    const isSingleBar = w.config.plotOptions.bar.maxSeriesToRender < series.length
     const isZeroData = isSingleBar
-      ? w.config.series.reduce((acc, curr) => {
-        return acc || parseInt(curr.data[j]) === 0
-      }, false)
-      : parseInt(w.config.series[i].data[j]) === 0
+      ? w.config.series.every(s => parseFloat(s.data[j]) === 0)
+      : parseFloat(w.config.series[i].data[j]) === 0
 
     if (!lineFill) {
       // if user provided a function in colors, we need to eval here
