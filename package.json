@@ -1,10 +1,10 @@
 {
   "name": "apexcharts",
-  "version": "4.5.0-c11",
+  "version": "4.5.0-c12",
   "description": "A JavaScript Chart Library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/apexcharts/apexcharts.js.git"
+    "url": "https://github.com/tomukasas/apexcharts.js.git"
   },
   "main": "dist/apexcharts.common.js",
   "es2020": "dist/apexcharts.esm.js",
@@ -94,7 +94,7 @@
     "webpack-cli": "5.0.1"
   },
   "bugs": {
-    "url": "https://github.com/apexcharts/apexcharts.js/issues"
+    "url": "https://github.com/tomukasas/apexcharts.js/issues"
   },
   "license": "MIT",
   "licenses": [
